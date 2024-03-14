@@ -1,0 +1,50 @@
+--- 
+- name: Deploy a Static Web Application
+  hosts: 
+  become: yes
+
+  tasks:
+    - name: Install Git
+      apt: 
+        name: git
+        state: present
+
+    - name: Creating a Directory
+      ansible.builtin.file:
+        path: "/Desktop/my_node_app"
+        state: directory
+
+    - name: Clone Git Repo
+      ansible.builtin.git:
+        repo: 'https://github.com/Tarikul69/DevOps-Project.git'
+        dest: '/Desktop/my_node_app'
+        clone: yes
+        update: yes    
+
+    - name: Install Nginx
+      apt: 
+        name: nginx
+        state: latest
+
+    - name: Start Nginx
+      systemd:
+         name: nginx
+         state: started
+         enabled: yes
+
+    - name: Nginx COnfiguratio file
+      copy:
+        src: 
+        dest: 
+      notify: restart nginx 
+
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+       
+    - name: start docker
+      ansible.builtin.service:
+        name: docker 
+        state: started
+        enabled: yes 
